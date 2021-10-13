@@ -13,7 +13,7 @@ int **multiplicationWithNum(int **firstMatrix, int rowFirsM, int colFirsM);
 int **matrixMultiplication(int **firstMatrix, int **secondMatrix, int rowFirsM, int colFirsM, int rowSecondM, int colSecondM);
 int **resize(int **firstMatrix, int rowFirsM, int colFirsM, int n, int m);
 int save(int** A,char* fileName, int rows, int cols);
-int** load(char* fileName);
+int** load(char* fileName, int numberM);
 void printMenu();
 int inputNum(int min, int max);
 
@@ -32,18 +32,18 @@ int main() {
         switch (choise) {
             case 1:
                 printf("\n Матрица А. Столбцы: ");
-                rowFirsM = inputNum(1, INT_MAX);
+                rowFirsM = inputNum(0, INT_MAX);
 				
                 printf("\n Матрица А. Колонки: ");
-                colFirsM = inputNum(1, INT_MAX);
+                colFirsM = inputNum(0, INT_MAX);
 	
                 firstMatrix = createMatrix(rowFirsM,colFirsM);
 				
                 printf("\n Матрица В. Столбцы: ");
-                rowSecondM = inputNum(1, INT_MAX);
+                rowSecondM = inputNum(0, INT_MAX);
 				
                 printf("\n Матрица В. Колонки: ");
-                colSecondM = inputNum(1, INT_MAX);
+                colSecondM = inputNum(0, INT_MAX);
 				
                 secondMatrix = createMatrix(rowSecondM,colSecondM);
                 break;
@@ -65,10 +65,10 @@ int main() {
                 value = inputNum(INT_MIN, INT_MAX);
 				
                 printf("\n Столбцы: ");
-                row = inputNum(1, INT_MAX);
+                row = inputNum(0, INT_MAX);
 				
                 printf("\n Колонки: ");
-                col = inputNum(1, INT_MAX);
+                col = inputNum(0, INT_MAX);
 				
                 if(choise == 1 && firstMatrix) {
                     firstMatrix[row][col] = value;
@@ -81,10 +81,10 @@ int main() {
                 choise = inputNum(1,2);
                 
                 printf("\n Столбцы: ");
-                row = inputNum(1, INT_MAX);
+                row = inputNum(0, INT_MAX);
                 
                 printf("\n Колонки: ");
-                col = inputNum(1, INT_MAX);
+                col = inputNum(0, INT_MAX);
 				
                 if(choise == 1 && firstMatrix) {
                     printf("\n%d\n",firstMatrix[row][col]);
@@ -99,7 +99,7 @@ int main() {
                 if(choise == 1 && firstMatrix) {
                     printMatrix(rowFirsM,colFirsM,firstMatrix);
                 } else if (choise == 2 && secondMatrix) {
-                    printMatrix(rowFirsM,colSecondM,secondMatrix);
+                    printMatrix(rowSecondM,colSecondM,secondMatrix);
                 }
             break;
             case 6:
@@ -119,23 +119,44 @@ int main() {
                 }   
             break;
             case 7:
+				printf("\n Выберете матрицу. 1 - A, 2 - B.->");
+                choise = inputNum(1,2);
+			
                 printf("\n Столбцы: ");
-                row = inputNum(1, INT_MAX);
+                row = inputNum(0, INT_MAX);
                 
                 printf("\n Колонки: ");
-                col = inputNum(1, INT_MAX);
+                col = inputNum(0, INT_MAX);
 				
-                if (firstMatrix) {
+                if (firstMatrix && choise == 1) {
                     firstMatrix = resize(firstMatrix, rowFirsM, colFirsM, row, col);
                     rowFirsM = row;
                     colFirsM = col;
-                }
+                } else if (secondMatrix && choise == 2) {
+					secondMatrix = resize(secondMatrix, rowSecondM, colSecondM, row, col);
+                    rowSecondM = row;
+                    colSecondM = col;
+				}
             break;
             case 8:
-                if (firstMatrix) save(firstMatrix,"test.txt", rowFirsM, colFirsM);
+				printf("\n Выберете матрицу. 1 - A, 2 - B.->");
+                choise = inputNum(1,2);
+				
+                if(choise == 1 && firstMatrix) {
+                    save(firstMatrix,"test.txt", rowFirsM, colFirsM);
+                } else if (choise == 2 && secondMatrix) {
+                    save(firstMatrix,"test1.txt", rowSecondM, colSecondM);
+                }
             break;
             case 9:
-                firstMatrix = load("test.txt");
+				printf("\n Выберете матрицу. 1 - A, 2 - B.->");
+                choise = inputNum(1,2);
+				
+                if(choise == 1) {
+                    firstMatrix = load("test.txt", 1);
+                } else if (choise == 2) {
+                    secondMatrix = load("test1.txt", 2);
+                } 
             break;
 			case 0:
                return 0;
@@ -207,7 +228,7 @@ int save(int** A,char* fileName, int rows, int cols) {
     return 1;
 }
 
-int** load(char* fileName) {
+int** load(char* fileName, int numberM) {
     FILE* fp = NULL;
     char arr[8];
     int t = 0, i = 0, j = 0;
@@ -221,8 +242,13 @@ int** load(char* fileName) {
     int row = 0, col = 0;
     fscanf(fp, "%d %d\n", &row, &col);
 	
-	rowFirsM = row;
-	colFirsM = col;
+	if (numberM == 1) {
+		rowFirsM = row;
+		colFirsM = col;
+	} else if (numberM == 2) {
+		rowSecondM = row;
+		colSecondM = col;
+	}
 
     int** A = createMatrix(row, col);
 
