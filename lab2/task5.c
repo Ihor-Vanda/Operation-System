@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdio_ext.h>
 #include <stdlib.h>
 
 typedef struct Node {
@@ -97,7 +98,7 @@ int enterNum() {
 
 	do {
 		res = scanf("%d", &num);
-		fflush(stdin);
+		__fpurge(stdin);
 
 		if (res != 1) printf("\n Некоректный ввод!\n->");
 	} while (res != 1);

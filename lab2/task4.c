@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdio_ext.h>
 #include <stdlib.h>
 
 int add (int element);
@@ -163,7 +164,7 @@ int inputNum(int min, int max) {
 
   do {
     res = scanf("%d", &temp);
-    fflush(stdin);
+    __fpurge(stdin);
 
     if (res != 1 || temp < min || temp > max) printf("\n Некорректный ввод!\n->");  
   } while (res != 1 || temp < min || temp > max);
@@ -180,4 +181,3 @@ void printArray() {
   } else
     printError();
 }
-

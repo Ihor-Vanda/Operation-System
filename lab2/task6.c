@@ -4,6 +4,8 @@
 #include <malloc.h>
 #include <locale.h>
 #include <limits.h>
+#include <stdio_ext.h>
+
 
 int **createMatrix(int n,int m);
 int printMatrix(int n, int m, int **arr);
@@ -27,7 +29,7 @@ int main() {
 	
     while (1){
         printMenu();
-        scanf("%d", &choise);
+        choise = inputNum(0, 9);
 		
         switch (choise) {
             case 1:
@@ -173,7 +175,7 @@ int inputNum(int min, int max) {
 
   do {
     res = scanf("%d", &temp);
-    fflush(stdin);
+    __fpurge(stdin);
 
     if (res != 1 || temp < min || temp > max) printf("\n Некорректный ввод!\n->");  
   } while (res != 1 || temp < min || temp > max);

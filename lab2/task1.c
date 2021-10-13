@@ -3,6 +3,7 @@
 
 int factorial (int n);
 double sinX(double x);
+double Sin2(double x);
 double cosX(double x);
 double enterDouble();
 void printError();
@@ -10,9 +11,6 @@ void printError();
 int main () {
 	double function = 0;
 	double a, b, i;
-
-	printf("\n%lf", sinX(5));
-	printf("\n%lf", cosX(5));
 	
 	printf("\n Enter 'a'\n->");
 	a = enterDouble();
@@ -34,7 +32,7 @@ double enterDouble() {
 	
 	do {
 		res = scanf("%lf", &num);
-		fflush(stdin);
+		__fpurge(stdin);
 		
 		if(res != 1) printf("\n Incorrect input!\n->");
 	} while (res != 1);
@@ -45,28 +43,31 @@ void printError() {
 	printf("\n Something went wrong :/\n->");
 }
 
+
 double sinX(double x) {
-	int i = 0;
-	double res, sum = 0;
+    int n = 0;
+    double sum, temp;
+    
+	sum = temp = x;
+    
 	do {
-		res = pow((-1), i) * (pow(x, 2 * i + 1) / factorial(2 * i + 1));
-		sum += res;
-		i++;
-	} while (fabs(res) > 0.1);
-	return sum;
+        n += 2;
+        temp *= -(x * x) / n / (n + 1);
+        sum += temp;
+    } while(fabs(temp) > 0.01);
+    return sum;
 }
-
+ 
 double cosX(double x) {
-	int i = 0;
-	double res, sum = 0;
+    int n = 0;
+    double sum, temp;
+    
+	sum = temp = 1;
+    
 	do {
-		res = pow((-1), i) * (pow(x, 2 * i) / factorial(2 * i));
-		sum += res;
-		i++;
-	} while (fabs(res) > 0.1);
-	return sum;
-}
-
-int factorial (int n) {
-  return (n < 2) ? 1 : n * factorial (n - 1);
+        n +=2;
+        temp *= -(x * x) / (n - 1) / n;
+        sum += temp;
+    } while(fabs(temp) > 0.01);
+    return sum;
 }

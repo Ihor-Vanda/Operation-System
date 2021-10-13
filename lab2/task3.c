@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdio_ext.h>
 #include <stdlib.h>
 #include <string.h>
 #include <malloc.h>
@@ -80,8 +81,9 @@ int enterNumber(int min, int max) {
 	int res, num;
 	
 	do {
-		fflush(stdin);
 		res = scanf("%d", &num);
+		__fpurge(stdin);
+		
 		if (res != 1 || num < min || num > max) printf("\n Некорректный ввод!\n->");
 	} while (res != 1 || num < min || num > max);
 	

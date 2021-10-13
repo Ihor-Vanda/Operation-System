@@ -73,4 +73,3 @@ int sumAbs(int *array, int size) {
 	return sum;
 }
 
-
