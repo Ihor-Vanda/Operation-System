@@ -132,10 +132,10 @@ int main() {
                 }
             break;
             case 8:
-                if (arrA) saveMatrix(arrA,"test.txt",nA,mA);
+                if (arrA) saveMatrix(arrA,"test.txt", nA, mA);
             break;
             case 9:
-                if (arrA) arrA = loadMatrix("test.txt");
+                arrA = loadMatrix("test.txt");
             break;
         }
     }
@@ -205,7 +205,7 @@ int** loadMatrix(char* fileName) {
     int t = 0, i = 0, j = 0;
 
     if (!(fp = fopen(fileName, "r"))) {
-         printf("\n Ошибка!");
+        printf("\n Ошибка!");
         getchar();
         return 0;
     }
@@ -336,4 +336,3 @@ int printMatrix(int n, int m, int **arr) {
         printf("\n");
     }
 }
-
