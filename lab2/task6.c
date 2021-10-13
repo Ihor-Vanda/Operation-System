@@ -5,138 +5,140 @@
 #include <locale.h>
 #include <limits.h>
 
-int **CreateMatrix(int n,int m);
+int **createMatrix(int n,int m);
 int printMatrix(int n, int m, int **arr);
-int **MatrixSum(int **arrA, int **arrB, int nA, int mA, int nB, int mB);
-int **MatrixDifference(int **arrA, int **arrB, int nA, int mA, int nB, int mB);
-int **MatrixMultiplication(int **arrA, int nA, int mA);
-int **TwoMatrixMultiplication(int **arrA, int **arrB, int nA, int mA, int nB, int mB);
-int **ResizeMatrix(int **arrA, int nA, int mA, int n, int m);
-int saveMatrix(int** A,char* fileName, int rows, int cols);
-int** loadMatrix(char* fileName);
+int **sumMatrix(int **firstMatrix, int **secondMatrix, int rowFirsM, int colFirsM, int rowSecondM, int colSecondM);
+int **differenceMatrix(int **firstMatrix, int **secondMatrix, int rowFirsM, int colFirsM, int rowSecondM, int colSecondM);
+int **multiplicationWithNum(int **firstMatrix, int rowFirsM, int colFirsM);
+int **matrixMultiplication(int **firstMatrix, int **secondMatrix, int rowFirsM, int colFirsM, int rowSecondM, int colSecondM);
+int **resize(int **firstMatrix, int rowFirsM, int colFirsM, int n, int m);
+int save(int** A,char* fileName, int rows, int cols);
+int** load(char* fileName);
 void printMenu();
 int inputNum(int min, int max);
 
+int rowFirsM, colFirsM, rowSecondM, colSecondM;
+int **firstMatrix = NULL, **secondMatrix = NULL;
+
 int main() {
     srand(time(0));
-    int nA,mA,nB,mB;
-    int **arrA = NULL, **arrB = NULL, **arrC = NULL;
-    int ch, chos, temp, i, j;
+    int choise, row, col, value;
+	int **resultMatrix = NULL;
 	
     while (1){
         printMenu();
-        scanf("%d", &ch);
+        scanf("%d", &choise);
 		
-        switch (ch) {
-            case 0:
-               return 0;
+        switch (choise) {
             case 1:
                 printf("\n Матрица А. Столбцы: ");
-                nA = inputNum(1, INT_MAX);
+                rowFirsM = inputNum(1, INT_MAX);
 				
                 printf("\n Матрица А. Колонки: ");
-                mA = inputNum(1, INT_MAX);
+                colFirsM = inputNum(1, INT_MAX);
 	
-                arrA = CreateMatrix(nA,mA);
+                firstMatrix = createMatrix(rowFirsM,colFirsM);
 				
                 printf("\n Матрица В. Столбцы: ");
-                nB = inputNum(1, INT_MAX);
+                rowSecondM = inputNum(1, INT_MAX);
 				
                 printf("\n Матрица В. Колонки: ");
-                mB = inputNum(1, INT_MAX);
+                colSecondM = inputNum(1, INT_MAX);
 				
-                arrB = CreateMatrix(nB,mB);
+                secondMatrix = createMatrix(rowSecondM,colSecondM);
                 break;
             case 2:
-                if (arrA) { 
-                    free(arrA);
-                    arrA = NULL;
+                if (firstMatrix) { 
+                    free(firstMatrix);
+                    firstMatrix = NULL;
                 }
-                if (arrB) {
-                    free(arrB);
-                    arrB = NULL;
+                if (secondMatrix) {
+                    free(secondMatrix);
+                    secondMatrix = NULL;
                 }
             break;
             case 3:
                 printf("\n Выберете матрицу. 1 - A, 2 - B.->");
-                chos = inputNum(1,2);
+                choise = inputNum(1,2);
 				
                 printf("\n Введите значение: ");
-                temp = inputNum(INT_MIN, INT_MAX);
+                value = inputNum(INT_MIN, INT_MAX);
 				
                 printf("\n Столбцы: ");
-                i = inputNum(1, INT_MAX);
+                row = inputNum(1, INT_MAX);
 				
                 printf("\n Колонки: ");
-                j = inputNum(1, INT_MAX);
+                col = inputNum(1, INT_MAX);
 				
-                if(chos == 1 && arrA) {
-                    arrA[i][j] = temp;
-                } else if (chos == 2 && arrB) {
-                    arrB[i][j] = temp;
+                if(choise == 1 && firstMatrix) {
+                    firstMatrix[row][col] = value;
+                } else if (choise == 2 && secondMatrix) {
+                    secondMatrix[row][col] = value;
                 }
             break;
             case 4:
                 printf("\n Выберете матрицу. 1 - A, 2 - B.->");
-                chos = inputNum(1,2);
+                choise = inputNum(1,2);
                 
                 printf("\n Столбцы: ");
-                i = inputNum(1, INT_MAX);
+                row = inputNum(1, INT_MAX);
                 
                 printf("\n Колонки: ");
-                j = inputNum(1, INT_MAX);
+                col = inputNum(1, INT_MAX);
 				
-                if(chos == 1 && arrA) {
-                    printf("\n%d\n",arrA[i][j]);
-                } else if (chos == 2 && arrB) {
-                    printf("\n%d\n",arrB[i][j]);
+                if(choise == 1 && firstMatrix) {
+                    printf("\n%d\n",firstMatrix[row][col]);
+                } else if (choise == 2 && secondMatrix) {
+                    printf("\n%d\n",secondMatrix[row][col]);
                 }
             break;
             case 5:
                 printf("\n Выберете матрицу. 1 - A, 2 - B.->");
-                chos = inputNum(1,2);
+                choise = inputNum(1,2);
 				
-                if(chos == 1 && arrA) {
-                    printMatrix(nA,nB,arrA);
-                } else if (chos == 2 && arrB) {
-                    printMatrix(mA,mB,arrB);
+                if(choise == 1 && firstMatrix) {
+                    printMatrix(rowFirsM,colFirsM,firstMatrix);
+                } else if (choise == 2 && secondMatrix) {
+                    printMatrix(rowFirsM,colSecondM,secondMatrix);
                 }
             break;
             case 6:
                 printf("\n 1 - Сумма\n 2 - Разность\n 3 - Умножить на число\n 4 - Умножить матрицы\n->");
-                chos = inputNum(1,4);
+                choise = inputNum(1,4);
 
-                if (arrA && arrB) {
-                    if(chos == 1) {
-                        arrC = MatrixSum(arrA,arrB,nA,mA,nB,mB);
-                    } else if(chos == 2) {
-                        arrC = MatrixDifference(arrA,arrB,nA,mA,nB,mB);
-                    } else if(chos == 3) {
-                        arrA = MatrixMultiplication(arrA,nA,mA);
-                    } else if (chos == 4) {
-                        arrC = TwoMatrixMultiplication(arrA,arrB,nA,mA,nB,mB);
+                if (firstMatrix && secondMatrix) {
+                    if(choise == 1) {
+                        resultMatrix = sumMatrix(firstMatrix,secondMatrix,rowFirsM,colFirsM,rowSecondM,colSecondM);
+                    } else if(choise == 2) {
+                        resultMatrix = differenceMatrix(firstMatrix,secondMatrix,rowFirsM,colFirsM,rowSecondM,colSecondM);
+                    } else if(choise == 3) {
+                        firstMatrix = multiplicationWithNum(firstMatrix,rowFirsM,colFirsM);
+                    } else if (choise == 4) {
+                        resultMatrix = matrixMultiplication(firstMatrix,secondMatrix,rowFirsM,colFirsM,rowSecondM,colSecondM);
                     }
                 }   
             break;
             case 7:
                 printf("\n Столбцы: ");
-                i = inputNum(1, INT_MAX);
+                row = inputNum(1, INT_MAX);
                 
                 printf("\n Колонки: ");
-                j = inputNum(1, INT_MAX);
+                col = inputNum(1, INT_MAX);
 				
-                if (arrA) {
-                    arrA = ResizeMatrix(arrA,nA,mA,i,j);
-                    nA = i;
-                    mA = j;
+                if (firstMatrix) {
+                    firstMatrix = resize(firstMatrix, rowFirsM, colFirsM, row, col);
+                    rowFirsM = row;
+                    colFirsM = col;
                 }
             break;
             case 8:
-                if (arrA) saveMatrix(arrA,"test.txt", nA, mA);
+                if (firstMatrix) save(firstMatrix,"test.txt", rowFirsM, colFirsM);
             break;
             case 9:
-                arrA = loadMatrix("test.txt");
+                firstMatrix = load("test.txt");
             break;
+			case 0:
+               return 0;
         }
     }
     return 0;
@@ -158,26 +160,32 @@ int inputNum(int min, int max) {
 }
 
 void printMenu() {
-	printf("\n 1 - Создать матрицу\n 2 - Удалить матрицу\n 3 - Изменить значение элемента\n"
+	printf("\n 1 - Создать матрицы\n 2 - Удалить матрицы\n 3 - Изменить значение элемента\n"
                " 4 - Получить значение элемента\n 5 - Распечатать матрицу\n"
                " 6 - Операции с матрицами\n 7 - Изменить размер\n 8 - Сохранить\n"
                " 9 - Загрузить\n 0 - Выход\n->");
 }
 
-int **ResizeMatrix(int **arrA, int nA, int mA, int n, int m) {
-	int i, j;
-    int **arrC = CreateMatrix(n,m);
+int **resize(int **firstMatrix, int rowFirsM, int colFirsM, int n, int m) {
+	int i, j, k, l;
+    int **resultMatrix = createMatrix(n, m);
 	
-    for (i = 0; i < n; i++) {
-        for (j = 0; j < m; j++) {
-            arrC[i][j] = arrA[i][j];
+	if (n > rowFirsM) k = rowFirsM;
+	else k = n;
+	
+	if (m > colFirsM) l = colFirsM;
+	else l = m;
+	
+    for (i = 0; i < k; i++) {
+        for (j = 0; j < l; j++) {
+            resultMatrix[i][j] = firstMatrix[i][j];
         }
     }
-    return arrC;
+    return resultMatrix;
 }
 
 
-int saveMatrix(int** A,char* fileName, int rows, int cols) {
+int save(int** A,char* fileName, int rows, int cols) {
     int i, j;
     FILE* fp = NULL;
     if (A == NULL) {
@@ -199,7 +207,7 @@ int saveMatrix(int** A,char* fileName, int rows, int cols) {
     return 1;
 }
 
-int** loadMatrix(char* fileName) {
+int** load(char* fileName) {
     FILE* fp = NULL;
     char arr[8];
     int t = 0, i = 0, j = 0;
@@ -212,8 +220,11 @@ int** loadMatrix(char* fileName) {
 
     int row = 0, col = 0;
     fscanf(fp, "%d %d\n", &row, &col);
+	
+	rowFirsM = row;
+	colFirsM = col;
 
-    int** A = CreateMatrix(row, col);
+    int** A = createMatrix(row, col);
 
     while (!feof(fp)) {
         fscanf(fp, "%c", &arr[t]);
@@ -235,22 +246,22 @@ int** loadMatrix(char* fileName) {
     return A;
 }
 
-int **TwoMatrixMultiplication(int **arrA, int **arrB, int nA, int mA, int nB, int mB) {
+int **matrixMultiplication(int **firstMatrix, int **secondMatrix, int rowFirsM, int colFirsM, int rowSecondM, int colSecondM) {
 	int i, j, k;
 	
-    if (mA == nB) {
-        int **arrC = CreateMatrix(nA, mB);
-        for (i = 0; i < nA; i++) {
-            for (j = 0; j < mB; j++) {
-                arrC[i][j] = 0;
-                for (k = 0; k < mA; k++) {
-                    arrC[i][j] += arrA[i][k] + arrB[k][j];
+    if (colFirsM == rowSecondM) {
+        int **resultMatrix = createMatrix(rowFirsM, colSecondM);
+        for (i = 0; i < rowFirsM; i++) {
+            for (j = 0; j < colSecondM; j++) {
+                resultMatrix[i][j] = 0;
+                for (k = 0; k < colFirsM; k++) {
+                    resultMatrix[i][j] += firstMatrix[i][k] + secondMatrix[k][j];
                 }
             }
         }
 		
-        printMatrix(nA, mB, arrC);
-        return arrC;
+        printMatrix(rowFirsM, colSecondM, resultMatrix);
+        return resultMatrix;
     } else{
         printf("\n Некорректные размеры матриц");
         return NULL;
@@ -258,52 +269,52 @@ int **TwoMatrixMultiplication(int **arrA, int **arrB, int nA, int mA, int nB, in
 }
 
 
-int **MatrixMultiplication(int **arrA, int nA, int mA) {
-    int **arrC = CreateMatrix(nA,mA);
+int **multiplicationWithNum(int **firstMatrix, int rowFirsM, int colFirsM) {
+    int **resultMatrix = createMatrix(rowFirsM,colFirsM);
     int num, i, j;
 	
     printf("\n Введите число: ");
     scanf("%d", &num);
 	
-    for (i = 0; i < nA; ++i) {
-        for (j = 0; j < mA; ++j) {
-            arrC[i][j] = num * arrA[i][j];
+    for (i = 0; i < rowFirsM; ++i) {
+        for (j = 0; j < colFirsM; ++j) {
+            resultMatrix[i][j] = num * firstMatrix[i][j];
         }
     }
-    printMatrix(nA,mA,arrC);
-    return arrC;
+    printMatrix(rowFirsM,colFirsM,resultMatrix);
+    return resultMatrix;
 }
 
-int **MatrixSum(int **arrA, int **arrB, int nA, int mA, int nB, int mB) {
+int **sumMatrix(int **firstMatrix, int **secondMatrix, int rowFirsM, int colFirsM, int rowSecondM, int colSecondM) {
 	int i, j;
-    int **arrC = CreateMatrix(nA,mA);
-    if (nA == nB && mA == mB){
-        for(i =0; i < nA; i++){
-            for (j = 0; j < mA; j++) {
-                arrC[i][j] = arrA[i][j] + arrB[i][j];
+    int **resultMatrix = createMatrix(rowFirsM,colFirsM);
+    if (rowFirsM == rowSecondM && colFirsM == colSecondM){
+        for(i =0; i < rowFirsM; i++){
+            for (j = 0; j < colFirsM; j++) {
+                resultMatrix[i][j] = firstMatrix[i][j] + secondMatrix[i][j];
             }
         }
-        printMatrix(nA,mA,arrC);
-        return arrC;
+        printMatrix(rowFirsM,colFirsM,resultMatrix);
+        return resultMatrix;
     } else{
          printf("\n Некорректные размеры матриц");
         return NULL;
     }
 }
 
-int **MatrixDifference(int **arrA, int **arrB, int nA, int mA, int nB, int mB){
-    int **arrC = CreateMatrix(nA,mA);
+int **differenceMatrix(int **firstMatrix, int **secondMatrix, int rowFirsM, int colFirsM, int rowSecondM, int colSecondM){
+    int **resultMatrix = createMatrix(rowFirsM,colFirsM);
 	int i, j;
 	
-    if (nA == nB && mA == mB) {
+    if (rowFirsM == rowSecondM && colFirsM == colSecondM) {
 		
-        for(i =0; i < nA; i++){
-            for (j = 0; j < mA; j++) {
-                arrC[i][j] = arrA[i][j] - arrB[i][j];
+        for(i =0; i < rowFirsM; i++){
+            for (j = 0; j < colFirsM; j++) {
+                resultMatrix[i][j] = firstMatrix[i][j] - secondMatrix[i][j];
             }
         }
-        printMatrix(nA,mA,arrC);
-        return arrC;
+        printMatrix(rowFirsM,colFirsM,resultMatrix);
+        return resultMatrix;
     } else{
         printf("\n Некорректные размеры матриц");
         return NULL;
@@ -311,7 +322,7 @@ int **MatrixDifference(int **arrA, int **arrB, int nA, int mA, int nB, int mB){
 }
 
 
-int **CreateMatrix(int n, int m) {
+int **createMatrix(int n, int m) {
 	int i, j;
     int **arr = (int **) malloc(n*sizeof (int *));
 	
